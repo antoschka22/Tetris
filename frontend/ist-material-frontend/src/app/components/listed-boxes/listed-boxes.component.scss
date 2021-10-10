@@ -1,0 +1,16 @@
+.box:hover {
+    background-color: lightgray;
+    border-radius: 15px;
+}
+.box{
+    padding:5px;
+}
+.box:first-child{
+    margin-top: 20px;
+}
+.box-bt{
+    margin-bottom: 10px;
+}
+.point{
+    cursor:pointer;
+}

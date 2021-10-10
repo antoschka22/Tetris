@@ -1,0 +1,28 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <!-- shows a table with all the reports your gonna set as repaired  -->
+    <h1 class="text-center" style="margin-top:20px">Damages that have been repaired</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Description</th>
+                <th scope="col">Repairing date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let reportOfItem of reportsOfItem">
+                <th scope="row">{{reportOfItem.id}}</th>
+                <td>{{reportOfItem.description}}</td>
+                <td>{{reportOfItem.repairing}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h3 class="text-center" style="margin-top:20px; font-weight: bold;">Set this item as functional</h3>
+    <!-- change the status -->
+    <form novalidate #f="ngForm" (ngSubmit)="onSubmit()">
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-success" [disabled]="f.invalid" style="margin-top: 10px;">Set as functional</button>
+        </div>
+    </form>
+</div>

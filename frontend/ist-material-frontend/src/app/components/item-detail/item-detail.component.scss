@@ -1,0 +1,17 @@
+.details{
+    padding: 10px;
+}
+.details:hover{
+    background: rgb(240, 240, 240);
+    border-radius: 10px;
+}
+.btn{
+    border-radius:10px; 
+    margin-top:10px;
+}
+// not be shown when printing the qr code
+@media print {
+    .print {
+      display: none;
+    }
+  }

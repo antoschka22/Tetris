@@ -1,0 +1,29 @@
+<div class="container">
+    <!-- beginning Form -->
+    <form novalidate #f="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+        <!-- box name  -->
+        <label>box name</label>
+        <input type="text"
+                class="form-control"
+                name="name"
+                ngModel
+                [(ngModel)] = "model.name"
+                required
+                #name="ngModel">
+        </div>
+        <!-- box description  -->
+        <div class="form-group">
+            <label>box description</label>
+            <input type="text"
+                class="form-control"
+                name="description"
+                ngModel
+                [(ngModel)] = "model.description"
+                required
+                #description="ngModel">        
+        </div><br>
+        <!-- buttons -->
+        <button type="submit" class="btn btn-primary" [disabled]="f.invalid" style="margin-right:5px;">Submit</button>
+    </form>
+</div>

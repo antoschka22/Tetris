@@ -1,0 +1,34 @@
+.box:hover {
+    background-color: lightgray;
+    border-radius: 15px;
+}
+.box{
+    padding:5px;
+}
+.box:first-child{
+    margin-top: 20px;
+}
+.box-bt{
+    margin-bottom: 10px;
+}
+.point{
+    cursor:pointer;
+}
+.col-md-10, .col-md-4, .col-sm-12{
+    background: rgb(238, 238, 238);
+    border-radius: 10px;
+}
+.col-md-10:hover, .col-md-4:hover, .col-sm-12:hover{
+    background: lightgray;
+}
+.col-sm-12:last-child{
+    margin-bottom: 30px;
+}
+.row{
+    padding-top: 10px;
+}
+.divider{
+    width:5px;
+    height:auto;
+    display:inline-block;
+}

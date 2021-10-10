@@ -1,0 +1,81 @@
+<app-navbar class="print"></app-navbar>
+<div *ngIf="box" class="container print">
+    <!-- box name & description -->
+    <h3>{{box.name}}
+    <small class="text-muted" *ngIf="box.description">: {{box.description}}</small>
+    <small class="text-muted">-</small>
+    <small style="color:lightgreen" *ngIf="box.usage === 'available'"> Status ({{box.usage}})</small>
+    <small style="color:red" *ngIf="box.usage === 'unavailable'"> Status ({{box.usage}})</small>
+    <small style="color:rgb(104, 104, 255)" *ngIf="box.usage === 'borrowed'"> Status ({{box.usage}})</small>
+    <small style="color:rgb(255, 195, 117)" *ngIf="box.usage === 'listed'"> Status ({{box.usage}})</small>
+    </h3>
+    <br>
+    <!-- list with all the items in the box -->
+    <ul class="list-group list-group-flush">
+        <li *ngFor="let item of box.items" class="list-group-item">
+          <div class="d-flex justify-content-between mb-3">
+            <div class="p-2 point" [routerLink]="'/items/detail/'+item.id">
+                <p class="onClick">{{item.name}}
+                    <small class="text-muted" *ngIf="box.description">- {{item.description}}</small>
+                </p>
+            </div>
+            <!-- deletes an item from that box -->
+            <form novalidate #f="ngForm" (ngSubmit)="onSubmit(item.id, item.name)">
+                <div class="p-2"><button type="submit" class="btn-close" [disabled]="f.invalid"  aria-label="Close"></button></div>
+            </form>
+          </div>
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-6">
+            <div class="d-grid gap-2" *ngIf="box.usage == 'available'">
+                <button type="button" 
+                    class="btn btn-outline-success" 
+                    data-toggle="modal" 
+                    data-target="#boxModal">
+                    <!-- ADMIN -->
+                    create a item list
+                </button>
+            </div>
+            <div class="d-grid gap-2" *ngIf="box.usage == 'listed' || box.usage == 'unavailable'">
+                <button type="button" 
+                    class="btn btn-outline-success" 
+                    data-toggle="modal" 
+                    data-target="#itemList"> 
+                    See list of items
+                </button>
+            </div>
+            <div class="d-grid gap-2" *ngIf="box.usage == 'borrowed'">
+                <button type="button" 
+                    class="btn btn-outline-success" 
+                    data-toggle="modal" 
+                    data-target="#borrowedList"> 
+                    See list of borrowed items
+                </button>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="d-grid gap-2">
+                <button type="button" 
+                    class="btn btn-outline-success" 
+                    data-toggle="modal" 
+                    data-target="#qrCodeModal"> 
+                    Get Qr Code
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="d-grid gap-2 mt-3">
+        <button class="btn btn-primary" type="button" (click)="goBack()">go back</button>
+    </div>
+</div>
+<!-- shows an error if cant fetch box -->
+<div *ngIf="error">
+    <h2>{{error}}</h2>
+    <button class="btn btn-primary" type="button" [routerLink]="'/'">All boxes</button>
+</div>
+
+<app-qr-code-modal [box]="box"></app-qr-code-modal>
+<app-box-item-list [box]="box"></app-box-item-list>
+<app-items-list-modal [box]="box"></app-items-list-modal>
+<app-items-borrow-modal [box]="box"></app-items-borrow-modal>

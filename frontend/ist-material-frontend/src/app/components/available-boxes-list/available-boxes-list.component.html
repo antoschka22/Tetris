@@ -1,0 +1,44 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <!-- add new box button -->
+    <div class="d-grid gap-2">
+        <button
+        class="btn btn-outline-primary box-bt" 
+        type="button" 
+        (click)="addBox()" 
+        style="border-radius:10px; margin-top:10px;">
+            Add new box
+        </button>
+    </div>
+    <div *ngIf="newBox" style="border: 1px solid black; padding: 10px; border-radius: 10px">
+        <app-add-box></app-add-box>
+    </div>
+    <!-- for looping all boxes -->
+    <div class="box point" *ngIf="boxesLength === 0">
+        <app-boxes-list-item [boxesLength]="boxesLength" [site]="site"></app-boxes-list-item>
+    </div>
+    <div *ngIf="boxesLength > 0">
+        <div class="box point" *ngFor="let singlebox of boxes">
+            <app-boxes-list-item [box]="singlebox" [boxesLength]="boxesLength"></app-boxes-list-item>
+        </div>
+    </div>
+    <div class="d-grid gap-2">
+        <!-- qr code for boxes list -->
+        <div class="d-grid gap-2 mt-3">
+            <button type="button" 
+                class="btn btn-outline-success" 
+                data-toggle="modal" 
+                data-target="#qrCodeModal"
+                style="border-radius: 10px;"> 
+                <!-- ADMIN -->
+                Get Qr Code
+            </button>
+        </div>
+        <!-- go back button -->
+        <button class="btn btn-primary mt-1" 
+                type="button" 
+                (click)="navigate()"
+                style="border-radius: 10px;">Go back</button>
+    </div>
+</div>
+<app-qr-code-modal [List]="site"></app-qr-code-modal>

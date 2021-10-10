@@ -1,0 +1,41 @@
+<!-- Modal -->
+<div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header print">
+            <!-- modal header -->
+          <h5 class="modal-title" id="exampleModalLongTitle">Qr Code</h5>
+          <button type="button" class="btn-close" aria-label="Close" data-dismiss="modal">
+          </button>
+        </div>
+        <!-- this is used for the item qr code -->
+        <div class="modal-body" style="margin: 0 auto" *ngIf="item">
+            <!-- prints the qr code -->
+            <p class="text-center">{{item.name}}</p>
+            <qr-code value="{{url}}" size="100" errorCorrectionLevel="L"></qr-code>
+        </div>
+        <!-- this is used for the box qr code -->
+        <div class="modal-body" style="margin: 0 auto" *ngIf="box">
+          <!-- prints the qr code -->
+          <p class="text-center">{{box.name}}</p>
+          <qr-code value="{{url}}" size="100" errorCorrectionLevel="L"></qr-code>
+        </div>
+        <!-- this is used for the user qr code -->
+        <div class="modal-body" style="margin: 0 auto" *ngIf="User">
+          <!-- prints the qr code -->
+          <p class="text-center">{{User.last_name}}</p>
+          <qr-code value="username:{{User.email}},password:{{User.password}}" size="100" errorCorrectionLevel="L"></qr-code>
+        </div>
+        <!-- this is used for the box list qr code -->
+        <div class="modal-body" style="margin: 0 auto" *ngIf="List">
+          <!-- prints the qr code -->
+          <p class="text-center">{{List}} boxes list</p>
+          <qr-code value="{{url}}" size="100" errorCorrectionLevel="L"></qr-code>
+        </div>
+        <div class="modal-footer print">
+            <!-- modal footer -->
+            <button type="button" class="btn btn-primary" (click)="print()">Print Qr Code</button>
+        </div>
+      </div>
+    </div>
+</div>

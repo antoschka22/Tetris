@@ -1,0 +1,31 @@
+.divider{
+    width:5px;
+    height:auto;
+    display:inline-block;
+}
+.btn-warning{
+    color:rgb(24, 17, 17);
+    background-color: rgb(255, 197, 89);
+}
+.title{
+    cursor:pointer;
+}
+.btn-warning:hover{
+    background: rgb(255, 180, 42);
+}
+.buttons{
+    margin-bottom: 10px;
+}
+html {
+    scroll-behavior: smooth;
+}
+   
+a {
+    text-decoration: none;
+    color: black;
+} 
+  
+#down {
+    margin-top: 100%;
+    padding-bottom: 25%;
+}

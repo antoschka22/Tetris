@@ -1,0 +1,122 @@
+<!-- you want two forms
+1. in box detail so you can get the box id from the url
+2. in items list so the user can select in which box he wants the box -->
+
+<div class="container my-3 print">
+<!-- box detail form -->
+    <form novalidate #f="ngForm" (ngSubmit)="onSubmit()"  *ngIf="!isOnItemsList()">
+        <div *ngIf="!toggleQrCodeMode" class="row mt-3">
+        <!-- select the item -->
+            <div class="col-2">
+                <label>Item name</label>
+            </div>
+            <div class="col-sm-10" *ngIf="!toggleQrCodeMode">
+                <select class="form-select" 
+                aria-label="Default select example"
+                [(ngModel)]="model.id"
+                name="name"
+                required>
+                    <option *ngFor="let item of itemsWithoutReport" [value]="item.id">
+                        {{item.name}} <p class="description" *ngIf="item.description !== ''">({{item.description}})</p>
+                    </option>
+                </select>
+            </div>
+        </div><br>
+        <div class="mb-2">
+            <!-- submit -->
+            <button type="submit" 
+                    class="btn btn-primary" 
+                    [disabled]="f.invalid" 
+                    style="margin-right:5px;"
+                    *ngIf="!toggleQrCodeMode">Submit</button>
+            <!-- scan item -->
+            <button class="btn btn-success" type="button" (click)="qrCode()" *ngIf="!toggleQrCodeMode">Scan Qr-Code</button>
+            <button class="btn btn-success" type="button" (click)="qrCode()" *ngIf="toggleQrCodeMode">use form</button>
+        </div>
+        <!-- scanner -->
+        <div class="con mt-3" *ngIf="toggleQrCodeMode">
+            <zxing-scanner 
+                [formats]="allowedFormats"
+                (scanSuccess)="ScanItem($event)"
+                [enable]=true>
+            </zxing-scanner>
+        </div>
+    </form>
+
+<!-- items list form -->
+    <form #f="ngForm" (ngSubmit)="onSubmit()"  *ngIf="isOnItemsList()" class="form-inline print">
+        <!-- name input -->
+        <label class="mt-2">Item name</label>
+        <input type="text"
+                class="form-control"
+                name="name"
+                ngModel
+                [(ngModel)] = "modelItems.name"
+                required
+                #name="ngModel"> 
+        <!-- description input -->
+            <label>description</label>
+            <input type="text"
+                class="form-control"
+                name="description"
+                ngModel
+                [(ngModel)] = "modelItems.description"
+                required
+                #description="ngModel">
+        <!-- add item to a box BUTTON -->
+        <div class="d-grid gap-2 mt-3" *ngIf="!toggleBoxInput">
+            <button class="btn btn-primary" type="button" (click)="addBox()">add item to a box</button>
+        </div>
+        <!-- box id input (select Box or the scanner) -->
+        <div *ngIf="toggleBoxInput">
+            <label>Box</label>
+        <div class="row">
+            <!-- select box -->
+            <div class="col-sm-10" *ngIf="!toggleQrCodeMode">
+                <select class="form-select" 
+                aria-label="Default select example"
+                [(ngModel)]="modelItems.box_id"
+                name="box_id"
+                required>
+                    <option *ngFor="let box of boxes" [value]="box.id">{{box.name}}</option>
+                </select>
+            </div>
+            <!-- text of the scanned box -->
+            <div *ngIf="toggleQrCodeMode" class="col-sm-10">
+                <input type="text"
+                    class="form-control"
+                    name="box_id"
+                    ngModel
+                    [(ngModel)] = "modelItems.box_id"
+                    #box_id="ngModel"
+                    required>
+            </div>
+            <!-- toggle scanner BUTTON  -->
+            <div class="col-sm-2">
+                <button class="btn btn-primary" type="button" (click)="qrCode()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" fill="currentColor" class="bi bi-camera" viewBox="0 0 16 16">
+                        <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1v6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z"/>
+                        <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
+                    </svg>
+                    Toggle box scan
+                </button>
+            </div>
+        </div>
+        </div>
+        <!-- submit button -->
+            <button type="submit" class="btn btn-primary mt-2" [disabled]="f.invalid" style="margin-right:5px;">Submit</button><br>
+        <!-- activate/deactivate camera  -->
+            <div class="d-grid gap-2 my-2">
+                <button class="btn btn-outline-primary" type="button" (click)="camera()" *ngIf="toggleQrCodeMode && !toggleCamera">Activate camera</button>
+                <button class="btn btn-primary" type="button" (click)="camera()" *ngIf="toggleCamera && toggleQrCodeMode">Deactivate camera</button>
+            </div>
+        <!-- scanner -->
+            <div class="con mt-3 mb-2" *ngIf="toggleCamera && toggleQrCodeMode">
+                <zxing-scanner 
+                    [formats]="allowedFormats"
+                    (scanSuccess)="ScanBox($event)"
+                    [enable]=true>
+                </zxing-scanner>
+            </div>
+    </form>
+</div>

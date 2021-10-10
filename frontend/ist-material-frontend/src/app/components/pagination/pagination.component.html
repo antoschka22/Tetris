@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-6">
+        <nav aria-label="...">
+            <ul class="pagination">
+              <li class="page-item disabled" *ngIf="currentPage === 1">
+                <span class="page-link">Previous</span>
+              </li>
+              <li class="page-item" *ngIf="currentPage !== 1" (click)="previous()">
+                <span class="page-link">Previous</span>
+              </li>
+              <li class="page-item" (click)="previous()"><a class="page-link"*ngIf="currentPage-1 !== 0">{{currentPage-1}}</a></li>
+              <li class="page-item active" aria-current="page">
+                <span class="page-link">{{currentPage}}</span>
+              </li>
+              <li class="page-item" (click)="next()" *ngIf="pageNumber !== currentPage"><a class="page-link">{{currentPage+1}}</a></li>
+              <li class="page-item" (click)="next()" *ngIf="currentPage === 1 && pageNumber === 3"><a class="page-link">{{currentPage+2}}</a></li>
+              <li class="page-item" (click)="next()" *ngIf="pageNumber !== currentPage">
+                <a class="page-link">Next</a>
+              </li>
+              <li class="page-item disabled" *ngIf="pageNumber === currentPage">
+                <span class="page-link">Next</span>
+              </li>
+            </ul>
+        </nav>        
+    </div>
+    <div class="col-3">
+        <div class="row">
+            <div class="col-7 offset-4">
+                <p class="p-1" style="font-weight: bold;">Amount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-3">
+        <select class="form-select" aria-label="Default select example">
+            <option [value]="5" (click)="amountOfItems($event)">5</option>
+            <option [value]="10" (click)="amountOfItems($event)">10</option>
+            <option [value]="15" (click)="amountOfItems($event)">15</option>
+        </select>
+    </div>
+</div>

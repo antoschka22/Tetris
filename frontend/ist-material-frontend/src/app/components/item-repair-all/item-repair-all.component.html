@@ -1,0 +1,43 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <div class="d-grid gap-2">
+        <!-- show the tables with the reports -->
+        <button type="submit" class="btn btn-warning" style="margin-top: 10px;" (click)="toggleTable()" *ngIf="!displayTable">Show table with all the damages</button>
+        <button type="submit" class="btn btn-warning" style="margin-top: 10px;" (click)="toggleTable()" *ngIf="displayTable">Hide table</button>
+    </div>
+    <!-- table with reports -->
+    <div *ngIf="displayTable">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- looping through all the reports -->
+                <tr *ngFor="let reportOfItem of reportsOfItem">
+                    <th scope="row">{{reportOfItem.id}}</th>
+                    <td>{{reportOfItem.description}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <h1 class="text-center" style="margin-top:20px">Send all the damages for repair</h1>
+    <!-- form -->
+    <form novalidate #f="ngForm" (ngSubmit)="onSubmit()">
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-success" [disabled]="f.invalid" style="margin-top: 10px;" (click)="loadingAnimation()">
+                <div *ngIf="!displayLoadingAnimation">
+                    Set as functional
+                </div>
+                <!-- loading animation when submitting the form -->
+                <div class="d-flex align-items-center" *ngIf="displayLoadingAnimation">
+                    <strong>Loading...</strong>
+                    <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                </div>
+            </button>
+        </div>
+    </form>
+</div>
+  

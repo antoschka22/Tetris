@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+</head>
+  <body class="text-center">  
+    <main class="form-signin">
+    <form #f="ngForm" (ngSubmit)="onSubmit()" class="form-inline">
+        <h1 class="mb-4">Tetris</h1>
+
+        <div class="form-floating">
+            <input type="email"
+                class="form-control"
+                id="floatingInput"
+                name="name"
+                placeholder="name@example.com"
+                ngModel
+                [(ngModel)] = "loginModel.username"
+                required
+                #name="ngModel">
+        <label for="floatingInput">Email address</label>
+        </div>
+        <div class="form-floating">
+            <input type="password"
+                class="form-control"
+                id="floatingPassword"
+                name="name"
+                placeholder="Password"
+                ngModel
+                [(ngModel)] = "loginModel.password"
+                required
+                #name="ngModel">
+        <label for="floatingPassword">Password</label>
+        </div>
+        <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" value="remember-me"> Remember me
+        </label>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <button class="w-100 btn btn-lg btn-primary" [disabled]="f.invalid" type="submit">Sign in</button>
+            </div>
+            <div class="col-6">
+                <button class="w-100 btn btn-lg" type="submit" (click)="goBack()">Go Back</button>
+            </div>
+        </div>  
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-outline-primary" (click)="scanMode()">Scan User</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    </main>
+</body>
+</html>
+
+<div *ngIf="scanUser" class="con">
+    <zxing-scanner #scanner
+        [formats]="allowedFormats"
+        (scanSuccess)="scanSuccessHandler($event)">
+    </zxing-scanner>
+</div>

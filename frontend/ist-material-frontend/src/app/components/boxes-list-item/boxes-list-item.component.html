@@ -1,0 +1,53 @@
+<!-- displays information about a box -->
+<div *ngIf="box" [routerLink]="'/boxes/' + box.id" class="boxDiv">
+  <dl class="row">
+    <dd class="col-sm-12" *ngIf="boxesLength > 0">
+      <figure class="text-center">
+        <blockquote class="blockquote">
+          <p>{{box.name}}</p>
+        </blockquote>
+        <figcaption class="blockquote-footer" *ngIf="box.description">
+          <p>Description: {{box.description}}</p>
+        </figcaption>
+      </figure>
+    </dd>
+  </dl>
+</div>
+<div class="boxDiv" *ngIf="boxesLength == 0">
+  <div class="row">
+    <dd class="col-sm-12">
+      <figure class="text-center" *ngIf="site == 'unavailable'">
+        <blockquote class="blockquote">
+          <p>There are no unavailable box</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+          <p>Description: all the boxes are available or are beeing borrowed at the moment</p>
+        </figcaption>
+      </figure>
+      <figure class="text-center" *ngIf="site == 'available'">
+        <blockquote class="blockquote">
+          <p>There are no boxes available</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+          <p>Description: all the boxes are beeing borrowed or are unavailable at the moment</p>
+        </figcaption>
+      </figure>
+      <figure class="text-center" *ngIf="site == 'borrowed'">
+        <blockquote class="blockquote">
+          <p>No boxes are beeing borrowed</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+          <p>Description: there are no boxes beeing borrowed at the moment, either available or unavailable</p>
+        </figcaption>
+      </figure>
+      <figure class="text-center" *ngIf="site == 'listed'">
+        <blockquote class="blockquote">
+          <p>No box has a list with items</p>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+          <p>Description: there are no boxes having a list of items, that should be put into that box</p>
+        </figcaption>
+      </figure>
+    </dd>
+  </div>
+</div>

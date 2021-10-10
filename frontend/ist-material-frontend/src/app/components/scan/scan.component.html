@@ -1,0 +1,8 @@
+<app-navbar></app-navbar>
+<div class="con">
+    <zxing-scanner #scanner
+        [formats]="allowedFormats"
+        (scanSuccess)="scanSuccessHandler($event)">
+    </zxing-scanner>
+</div>
+

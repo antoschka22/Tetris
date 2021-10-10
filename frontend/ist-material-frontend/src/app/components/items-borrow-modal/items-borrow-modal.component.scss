@@ -1,0 +1,22 @@
+.con {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+zxing-scanner  {
+    max-width: 70%;
+    min-height: 400px;
+}
+
+.point{
+    cursor:pointer;
+}
+
+.btn-close{
+    cursor: context-menu;
+}
+.context{
+    cursor: context-menu;
+}

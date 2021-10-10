@@ -1,0 +1,13 @@
+.point{
+    cursor:pointer;
+}
+.onClick:hover{ 
+    font-weight: bold;
+}
+
+// not be shown when printing the qr code
+@media print {
+    .print {
+      display: none;
+    }
+  }

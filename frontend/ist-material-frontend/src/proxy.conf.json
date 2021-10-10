@@ -1,0 +1,7 @@
+{
+    "/bootstrap/4.0.0/js/*": {
+        "target": "https://maxcdn.bootstrapcdn.com",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}

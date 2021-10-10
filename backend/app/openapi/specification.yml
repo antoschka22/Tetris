@@ -1,0 +1,1224 @@
+openapi: 3.0.1
+info:
+  title: Tetris
+  version: 1.0.0
+servers:
+- url: /api/v1
+paths:
+  /secret:
+    get:
+      tags:
+        - healthcheck
+      summary: Return secret string
+      operationId: web.security.jwt.get_secret
+      responses:
+        '200':
+          description: secret response
+          content:
+            'text/plain':
+              schema:
+                type: string
+      security:
+      - jwt: ['secret']
+  /users:
+    get:
+      tags:
+        - user
+      summary: returns all the users
+      operationId: web.controllers.user_controller.get_all_user
+      responses:
+        200:
+          description: return the information of the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: User doesn't exist
+          content: {}
+  /users/{id}:
+    get:
+      tags:
+        - user
+      summary: returns the information about the user
+      operationId: web.controllers.user_controller.get_user
+      parameters:
+      - name: id
+        in: path
+        description: The id of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: return the information of the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: User doesn't exist
+          content: {}
+  /reports:
+    post:
+      tags:
+      - report
+      summary: adds a new report of an item
+      operationId: web.controllers.report_controller.add_report
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Report'
+              x-body-name: new_report
+        required: false
+      responses:
+        201:
+          description: New report created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+      x-codegen-request-body-name: new_report
+  /reports/{uuid}:
+    delete:
+        tags:
+        - report
+        summary: remove report
+        operationId: web.controllers.report_controller.remove_report
+        parameters:
+        - name: uuid
+          in: path
+          description: The id of the report you want to delete
+          required: true
+          schema:
+            type: string
+        responses:
+          202:
+            description: Successfully deleted report
+            content: {}
+          404:
+            description: Report doesnt exist
+            content: {}
+    get:
+      tags:
+      - report
+      summary: returns all the report of an item
+      operationId: web.controllers.report_controller.get_reports
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the item
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: returned all reports
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        404:
+          description: Item hasnt been reported yet
+          content: {}
+  
+  /reports/repairing/{uuid}:
+    put:
+      tags:
+      - report
+      summary: send item for repair
+      operationId: web.controllers.report_controller.update_report_repairing
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the report
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Report'
+              x-body-name: report
+        required: true
+      responses:
+        200:
+          description: Successfully updated report
+          content: {}
+        404:
+          description: Report does not exist
+          content: {}
+      x-codegen-request-body-name: uuid
+    get:
+      tags:
+      - report
+      summary: returns the damages that are been dealt with
+      operationId: web.controllers.report_controller.get_repairing_report
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the item
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: returned all reports
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        404:
+          description: Item hasnt been send for repair yet
+          content: {}
+
+  /reports/repairing/all/{uuid}:
+    put:
+      tags:
+      - report
+      summary: send all reports of an item for repair
+      operationId: web.controllers.report_controller.update_all_report_repairing
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the item
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Report'
+              x-body-name: report
+        required: true
+      responses:
+        200:
+          description: Successfully updated report
+          content: {}
+        404:
+          description: Report does not exist
+          content: {}
+      x-codegen-request-body-name: uuid
+  /reports/repaired/{uuid}:
+    put:
+      tags:
+      - report
+      summary: item has been repaired
+      operationId: web.controllers.report_controller.update_report_repaired
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the report
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Report'
+              x-body-name: report
+        required: true
+      responses:
+        200:
+          description: Successfully updated report
+          content: {}
+        404:
+          description: Report does not exist
+          content: {}
+      x-codegen-request-body-name: uuid
+  /reports/amount/{uuid}:
+    get:
+      tags:
+      - report
+      summary: return the amount of reports an item has
+      operationId: web.controllers.report_controller.get_amount_of_reports
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the item
+        required: true
+        schema:
+          type: string
+          x-body-name: get_amount_of_reports
+      responses:
+        200:
+          description: returned the amount of reports
+          content:
+            application/json:
+              schema:
+                type: number
+        404:
+          description: Cant find the item
+          content: {}
+  /healthcheck:
+    get:
+      tags:
+      - healthcheck
+      summary: Healthcheck should return OK
+      operationId: web.controllers.healthcheck.healthcheck
+      responses:
+        200:
+          description: Appllication is running
+          content:
+            application/json:
+              schema:
+                type: string
+  /login:
+    post:
+      tags:
+      - login
+      summary: Return JWT token
+      operationId: web.security.jwt.login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginCredentials'
+              x-body-name: body
+        required: false
+      responses:
+        200:
+          description: JWT token
+          content:
+            application/json:
+              schema:
+                type: string
+        403:
+          description: Unautorized
+          content:
+            application/json:
+              schema:
+                type: string
+      x-codegen-request-body-name: credentials
+  /boxes/missing:
+    get:
+      tags:
+      - box
+      summary: get the boxes with the missing items
+      operationId: web.controllers.box_controller.get_box_with_missing_items
+      responses:
+        200:
+          description: Successfully retrived box
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Box_missing'
+        404:
+          description: Box doesn't exist
+          content: {}
+  /boxes/{box_id}:
+    put:
+      tags:
+      - box
+      summary: change the usage and contact person of a box
+      operationId: web.controllers.box_controller.update_box
+      parameters:
+      - name: box_id
+        in: path
+        description: The id of the box
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoxUsage&ContactPerson'
+              x-body-name: box
+        required: true
+      responses:
+        204:
+          description: Successfully updated box
+          content: {}
+        404:
+          description: Box does not exist
+          content: {}
+      x-codegen-request-body-name: box
+    get:
+      tags:
+      - box
+      summary: get a box by id
+      operationId: web.controllers.box_controller.get_box
+      parameters:
+      - name: box_id
+        in: path
+        description: The id of the box to retrieve
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successfully retrived box
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Box'
+        404:
+          description: Box doesn't exist
+          content: {}
+    post:
+      tags:
+      - box
+      summary: adds an item to a box
+      operationId: web.controllers.box_controller.add_item_to_box
+      parameters:
+      - name: box_id
+        in: path
+        description: The id of the box to retrieve
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+              x-body-name: new_item
+        required: false
+      responses:
+        201:
+          description: New item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+      x-codegen-request-body-name: new_item
+  /boxes/add:
+    post:
+        tags:
+        - box
+        summary: adds a new box
+        operationId: web.controllers.box_controller.add_box
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Box'
+                x-body-name: add_box
+          required: false
+        responses:
+          201:
+            description: New box created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Box'
+        x-codegen-request-body-name: new_box
+  /boxes:
+    get:
+      tags:
+      - box
+      summary: get all the boxes
+      operationId: web.controllers.box_controller.get_all_boxes
+      responses:
+        200:
+          description: Successfully retrived box
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Box'
+  /boxes/borrowed:
+    get:
+      tags:
+      - box
+      summary: get all the boxes that are beeing used at the moments
+      operationId: web.controllers.box_controller.get_all_borrowed_boxes
+      responses:
+        200:
+          description: Successfully retrived box
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Box'   
+  /boxes/listed:
+    get:
+      tags:
+      - box
+      summary: get all the boxes that have a list of item 
+      operationId: web.controllers.box_controller.get_all_listed_boxes
+      responses:
+        200:
+          description: Successfully retrived box
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Box'         
+  /boxes/available:
+    get:
+      tags:
+      - box
+      summary: get all the boxes that are available (boxes that can be used)
+      operationId: web.controllers.box_controller.get_all_available_boxes
+      responses:
+        200:
+          description: Successfully retrived box
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Box'
+  /boxes/unavailable:
+    get:
+      tags:
+      - box
+      summary: get all the boxes that are unavailable (something in the box is missing)
+      operationId: web.controllers.box_controller.get_all_unavailable_boxes
+      responses:
+        200:
+          description: Successfully retrived box
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Box'
+  /items/detail:
+    get:
+      tags:
+      - item
+      summary: get all the items with the box name and amount of reports, you also need to send the offset and limit for pagination
+      operationId: web.controllers.item_controller.get_item_with_box_name
+      parameters:
+        - in: query
+          name: offset
+          required: true
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          required: true
+          schema:
+            type: integer
+          description: The numbers of items to return
+      responses:
+        200:
+          description: Successfully retrived items with box
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemWithBoxName'
+        404:
+          description: Item doesn't exist
+          content: {}
+  /items/amount:
+    get:
+      tags:
+      - item
+      summary: get the amount of items stored in the database
+      operationId: web.controllers.item_controller.get_amount_of_items
+      responses:
+        200:
+          description: Successfully retrieved the amount of item
+          content:
+            application/json:
+              schema:
+                type: integer
+        404:
+          description: Item doesn't exist
+          content: {}
+  /items/detail/{uuid}:
+    get:
+      tags:
+      - item
+      summary: get a box by id
+      operationId: web.controllers.item_controller.get_item_with_extra_info_by_id
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the item
+        schema:
+          type: string
+        required: true
+      responses:
+        200:
+          description: Successfully retrived item with the extra info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemWithBoxName'
+        404:
+          description: Item doesn't exist
+          content: {}
+  /items/withoutBox:
+    get:
+        tags:
+        - item
+        summary: get all the items that are not in a box
+        operationId: web.controllers.item_controller.get_items_outside_of_box
+        responses:
+          200:
+            description: Successfully retrived item
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Item'
+          404:
+            description: Item doesn't exist
+            content: {}
+  /items/{item_name}/{box_id}:
+    get:
+      tags:
+      - item
+      summary: get an item by id
+      operationId: web.controllers.item_controller.get_item_by_name_and_box_id
+      parameters:
+      - name: item_name
+        in: path
+        description: the name of the item you want to retrieve
+        required: true
+        schema:
+          type: string
+      - name: box_id
+        in: path
+        description: the id of the box that item is in
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successfully retrived item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        404:
+          description: Item doesn't exist
+          content: {}
+
+  /items/{uuid}:
+    get:
+      tags:
+      - item
+      summary: get an item by id
+      operationId: web.controllers.item_controller.get_item
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the item to retrieve
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successfully retrived item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        404:
+          description: Item doesn't exist
+          content: {}
+    put:
+      tags:
+      - item
+      summary: change an item
+      operationId: web.controllers.item_controller.update_item
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the item
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+              x-body-name: item
+        required: true
+      responses:
+        200:
+          description: Successfully updated item
+          content: {}
+        404:
+          description: Item does not exist
+          content: {}
+      x-codegen-request-body-name: item
+    delete:
+      tags:
+      - item
+      summary: remove item
+      operationId: web.controllers.item_controller.remove_item
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the item to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        202:
+          description: Successfully deleted item
+          content: {}
+        404:
+          description: Item doesn't exist
+          content: {}
+      security:
+      - jwt: []
+  /changeBox/{uuid}:
+    put:
+      tags:
+      - item
+      summary: change the item from a box
+      operationId: web.controllers.item_controller.update_item_in_box
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the item
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/boxId'
+              x-body-name: boxId
+        required: true
+      responses:
+        200:
+          description: Successfully updated item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        404:
+          description: Item does not exist
+          content: {}
+      x-codegen-request-body-name: box
+  
+  /list/searchItem/{box_id}/{item_id}:
+    put:
+      tags:
+      - list
+      summary: delete item from box (set done, missing, inbox, buying and item_id as null)
+      operationId: web.controllers.list_controller.update_list_by_name
+      parameters:
+      - name: box_id
+        in: path
+        description: The id of the box
+        required: true
+        schema:
+          type: string
+      - name: item_id
+        in: path
+        description: The name of the item
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/list_item_by_box'
+              x-body-name: list
+        required: true
+      responses:
+        204:
+          description: Successfully updated item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/list_item'
+        404:
+          description: Item does not exist
+          content: {}
+      x-codegen-request-body-name: list
+  /list/item/{uuid}:
+    delete:
+        tags:
+        - list
+        summary: remove an item in a list
+        operationId: web.controllers.list_controller.remove_item_in_list
+        parameters:
+        - name: uuid
+          in: path
+          description: the id of the list item (list(id))
+          required: true
+          schema:
+            type: string
+        responses:
+          202:
+            description: Successfully deleted item
+            content: {}
+          404:
+            description: Item doesnt exist
+            content: {}
+  /list/byId/{uuid}:
+    get:
+      tags:
+        - list
+      summary: returns a list
+      operationId: web.controllers.list_controller.get_list
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the list
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: returns the list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/list_item'
+        404:
+          description: List doesn't exist
+          content: {}
+  /list/notStock:
+    get:
+      tags:
+        - list
+      summary: returns the items that arent on stock
+      operationId: web.controllers.list_controller.get_items_not_in_stock
+      responses:
+        200:
+          description: returns the list of items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/list_item'
+        404:
+          description: List doesn't exist
+          content: {} 
+  /list/notStock/count:
+    get:
+      tags:
+        - list
+      summary: return the amount of reports of an item missing
+      operationId: web.controllers.list_controller.get_amount_of_reports
+      responses:
+        200:
+          description: returns the amount of reports of an item missing
+          content:
+            application/json:
+              schema:
+                type: integer
+        404:
+          description: List doesn't exist
+          content: {} 
+  /list/notStock/{uuid}:
+    get:
+      tags:
+        - list
+      summary: returns the items that arent on stock in that box
+      operationId: web.controllers.list_controller.get_items_not_in_stock_by_box
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the box
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: returns the list of items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/list_item'
+        404:
+          description: List doesn't exist
+          content: {}  
+  /list/{uuid}:
+    get:
+      tags:
+        - list
+      summary: returns the lists of a box
+      operationId: web.controllers.list_controller.get_list_with_items_in_box
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the box
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: returns the list of items that should be in that box
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/list_item'
+        404:
+          description: List doesn't exist
+          content: {}
+    delete:
+        tags:
+        - list
+        summary: remove list
+        operationId: web.controllers.list_controller.remove_list
+        parameters:
+        - name: uuid
+          in: path
+          description: The id of the box which that list is assigned to
+          required: true
+          schema:
+            type: string
+        responses:
+          202:
+            description: Successfully deleted list
+            content: {}
+          404:
+            description: List doesnt exist
+            content: {}
+    put:
+      tags:
+      - list
+      summary: change a list, send an empty string (buying, missing, done, inbox) if you want to put the current stamp if not send null
+      operationId: web.controllers.list_controller.update_list
+      parameters:
+      - name: uuid
+        in: path
+        description: The id of the list
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/list_item'
+              x-body-name: list
+        required: true
+      responses:
+        204:
+          description: Successfully updated item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/list_item'
+        404:
+          description: Item does not exist
+          content: {}
+      x-codegen-request-body-name: list
+  /list/addItem:
+    post:
+        tags:
+        - list
+        summary: adds an item to a list (item_name, box_id, item_id)
+        operationId: web.controllers.list_controller.add_item_to_list
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/list_item'
+                x-body-name: new_item
+        responses:
+          201:
+            description: New item inserted into list
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/list_item'
+  /items/:
+    get:
+      tags:
+      - item
+      summary: get all the items
+      operationId: web.controllers.item_controller.get_all_items
+      responses:
+        200:
+          description: Successfully retrived item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    post:
+      tags:
+      - item
+      summary: adds an item without a box
+      operationId: web.controllers.item_controller.add_item
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+              x-body-name: new_item
+        required: false
+      responses:
+        201:
+          description: New item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+      x-codegen-request-body-name: new_item
+      security:
+      - jwt: ['secret']
+components:
+  securitySchemes:
+      jwt:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+        x-bearerInfoFunc: web.security.jwt.decode_token
+  schemas:
+    BoxUsage&ContactPerson:
+      required: 
+        - usage
+        - contactperson
+      type: object
+      properties:
+        id: 
+          type: string
+        usage: 
+          type: string
+          nullable: true
+        contactperson: 
+          type: string
+          nullable: true
+      example:
+        id: 1c11f4ab-98f4-40a7-be4e-eba5d3140ada
+        usage: available
+        contactperson: 014abe11-ea5d-4b7e-b873-b2c5e8a804d0
+    list_item:
+      required:
+        - box_id
+        - item_name
+        - item_id
+      type: object
+      properties:
+        id:
+          type: string
+        box_id:
+          type: string
+        item_name:
+          type: string
+        done:
+          type: string
+          format: date
+          nullable: true
+          description: date when the box got brought back
+          example: "2021-01-28"
+        inbox:
+          type: string
+          format: date
+          nullable: true
+          description: date when the item was inserted into the box
+          example: "2021-01-28"
+        missing:
+          type: string
+          format: date
+          nullable: true
+          description: date when the item was reported missing
+          example: "2021-01-28"
+        item_id: 
+          type: string
+          nullable: true
+        buying:
+          type: string
+          format: date
+          nullable: true
+          description: date when the missing item was bought
+          example: "2021-01-28"
+      example:
+        id: 1c11f4ab-98f4-40a7-be4e-eba5d3140ada
+        box_id: 41fc4bc5-2d18-4dcf-973c-7326f5693e95
+        item_name: Wettex
+        done: "2021-01-28"
+        inbox: "2021-01-28"
+        missing: "2021-01-28"
+        item_id: 014abe11-ea5d-4b7e-b873-b2c5e8a804d0
+        buying: "2021-01-28"
+    list_item_by_box:
+      required:
+        - box_id
+      type: object
+      properties:
+        box_id:
+          type: string
+        done:
+          type: string
+          format: date
+          nullable: true
+        inbox:
+          type: string
+          format: date
+          nullable: true
+        missing:
+          type: string
+          format: date
+          nullable: true
+      example:
+        box_id: 41fc4bc5-2d18-4dcf-973c-7326f5693e95
+        done: false
+        inbox: false
+        missing: false
+    User:
+      required:
+        - email
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        role: 
+          type: string
+        username:
+          type: string
+        specialization: 
+          type: string
+      example:
+        id: 1c11f4ab-98f4-40a7-be4e-eba5d3140ada
+        email: antonio@molina.com
+        password: test
+        first_name: Antonio
+        last_name: Molina
+        role: admin
+        username: jesus
+        specialization: Full Stack Developer
+    Box:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        usage:
+          type: string
+        contactperson:
+          type: string
+          nullable: true
+        list:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+      example:
+        id: eb9a92e8-aeeb-4767-b5f2-3255993aa140
+        name: Box 1
+        description: Box 1 description
+        usage: available
+        contactperson: Benito Antonio Martinez
+    Report:
+      required:
+      - description
+      type: object
+      properties:
+        id:
+          type: string
+        description:
+          type: string
+        item_id:
+          type: string
+        repaired:
+          type: string
+          format: date
+          nullable: true
+          description: date when its repaired
+          example: "2021-01-30"
+        repairing:
+          type: string
+          format: date
+          nullable: true
+          description: date when it was send for repair
+          example: "2021-01-28"
+      example:
+        description: item is damaged badly
+        item_id: 61179c6d-6e4a-4a8c-a247-7e7283fe3f65
+        repaired: "2021-01-28"
+        repairing: "2021-01-28"
+    Item:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+        box_id:
+          type: string
+          nullable: true
+      example:
+        id: 61179c6d-6e4a-4a8c-a247-7e7283fe3f65
+        name: Seil
+        description: langes Seil
+        status: functional
+        box_id: dbb97db0-2366-4f87-a31b-2364e2ba624b
+    ItemWithBoxName:
+      type: object
+      properties:
+        item:
+          $ref: '#/components/schemas/Item'
+        Boxname:
+          type: string
+        AmountOfReport:
+          type: number
+      example:
+        id: 61179c6d-6e4a-4a8c-a247-7e7283fe3f65
+        name: Seil
+        description: langes Seil
+        status: functional
+        box_id: dbb97db0-2366-4f87-a31b-2364e2ba624b
+        Boxname: Box1
+        AmountOfReport: 0
+    boxId:
+      required:
+      - box_id
+      type: object
+      properties:
+        box_id:
+          type: string
+          nullable: true
+      example:
+        box_id: 61179c6d-6e4a-4a8c-a247-7e7283fe3f65
+    LoginCredentials:
+      required:
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+          description: email
+        password:
+          type: string
+      example:
+        username: antonio@molina.com
+        password: password
+    Box_missing:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        usage:
+          type: string
+        contactperson:
+          type: string
+          nullable: true
+        list:
+          type: array
+          items:
+            $ref: '#/components/schemas/list_item'
+      example:
+        id: eb9a92e8-aeeb-4767-b5f2-3255993aa140
+        name: Box 1
+        description: Box 1 description
+        usage: available
+        contactperson: Benito Antonio Martinez

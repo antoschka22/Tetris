@@ -1,0 +1,31 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <!-- for looping all boxes -->
+    <div class="box point" *ngIf="boxesLength === 0">
+        <app-boxes-list-item [boxesLength]="boxesLength" [site]="site"></app-boxes-list-item>
+    </div>
+    <div *ngIf="boxesLength > 0">
+        <div class="box point" *ngFor="let singlebox of boxes">
+            <app-boxes-list-item [box]="singlebox" [boxesLength]="boxesLength"></app-boxes-list-item>
+        </div>
+    </div>
+    <div class="d-grid gap-2">
+        <!-- qr code for boxes list -->
+        <div class="d-grid gap-2 mt-3">
+            <button type="button" 
+                class="btn btn-outline-success" 
+                data-toggle="modal" 
+                data-target="#qrCodeModal"
+                style="border-radius: 10px;"> 
+                <!-- ADMIN -->
+                Get Qr Code
+            </button>
+        </div>
+        <!-- go back button -->
+        <button class="btn btn-primary mt-1" 
+                type="button" 
+                (click)="navigate()"
+                style="border-radius: 10px;">Go back</button>
+    </div>
+</div>
+<app-qr-code-modal [List]="site"></app-qr-code-modal>

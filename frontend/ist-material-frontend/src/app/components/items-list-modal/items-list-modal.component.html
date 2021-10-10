@@ -1,0 +1,103 @@
+<div *ngIf="box" class="modal fade bd-example-modal-lg" id="itemList" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+      <div class="modal-header">
+        <!-- modal header  -->
+          <h5 class="modal-title" id="exampleModalLabel" *ngIf="box.usage !== 'unavailable'">Items list: <b>{{box.name}}</b></h5>
+          <h3 class="modal-title" id="exampleModalLabel" *ngIf="box.usage === 'unavailable'">Missing items in the <b>{{box.name}}</b></h3>
+          <button type="button" class="btn-close" aria-label="Close" data-dismiss="modal">
+          </button>
+      </div>
+      <div class="row mt-3" style="margin-bottom: -10px;" *ngIf="box.usage !== 'unavailable'">
+        <div class="col-3 offset-9">
+          <button type="button" class="btn btn-danger" (click)="deleteList(box.id)">
+            Delete List
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Handle</th>
+                <th scope="col">Scan</th>
+                <th scope="col">In Box</th>
+                <th scope="col">Manage</th>
+              </tr>
+            </thead>
+            <!-- if the box is available, listed or borrowed -->
+            <tbody>
+              <tr *ngFor="let item of itemsInList">
+                <td>{{item.item_name}}</td>
+                <td class="point" *ngIf="!item.inbox">
+                  <a (click)="showScanner(item.item_name, item.missing)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="26" fill="currentColor" class="bi bi-camera-video" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556v4.35zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H2z"/>
+                    </svg>
+                    <span style="margin: 10px 0 0 10px;">Scan</span>
+                  </a>
+                </td>
+                <td class="context" *ngIf="item.inbox != null">
+                  <span style="margin: 10px 0 0 10px;">Scanned</span>
+                </td>
+                <td *ngIf="item.inbox != null">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                    <path d="M13.485 1.431a1.473 1.473 0 0 1 2.104 2.062l-7.84 9.801a1.473 1.473 0 0 1-2.12.04L.431 8.138a1.473 1.473 0 0 1 2.084-2.083l4.111 4.112 6.82-8.69a.486.486 0 0 1 .04-.045z"/>
+                  </svg>
+                </td>
+                <td *ngIf="!item.inbox">
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                </td>
+                <td *ngIf="!item.inbox" class="point">
+                  <button type="button" class="btn-sm btn-success" (click)="restock(item)" *ngIf="!item.missing">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                      <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                    </svg>
+                  </button>
+                  <a (click)="checkItem(item)" *ngIf="item.missing">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-check" viewBox="0 0 16 16">
+                      <path d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                      <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                    </svg>
+                    <span style="margin: 10px 0 0 10px;">Scan</span>
+                  </a>
+                  <div class="divider"></div>
+                  <button *ngIf="!item.missing" type="button" class="btn-sm btn-danger" (click)="deleteItem(item.id)">
+                    <svg *ngIf="!displayLoadingAnimation || this.checkId !== item.id" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                      <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                    </svg>
+                    <div class="d-flex align-items-center" *ngIf="displayLoadingAnimation && this.checkId === item.id">
+                      <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                    </div>
+                  </button>
+                </td>
+                <td *ngIf="item.inbox != null"></td>
+              </tr>
+              <tr>
+                <td colspan="5">
+                  <div class="d-grid gap-2">
+                    <button class="btn btn-success" (click)="borrowBox()">
+                      Borrow this box                    
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="con" *ngIf="showScan">
+            <zxing-scanner
+                  [formats]="allowedFormats"
+                  (scanSuccess)="scanSuccessHandler($event)">
+            </zxing-scanner>
+          </div>
+          <div class="con" *ngIf="checkItemWithScan">
+            <zxing-scanner
+                  [formats]="allowedFormats"
+                  (scanSuccess)="scanCheckItem($event)">
+            </zxing-scanner>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

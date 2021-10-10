@@ -1,0 +1,22 @@
+.con {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+zxing-scanner  {
+    max-width: 60%;
+    min-height: 400px;
+}
+
+.container{
+    border: 1px solid black;
+    border-radius: 10px;
+}
+// not be shown when printing the qr code
+@media print {
+    .print {
+        display: none;
+    }
+}

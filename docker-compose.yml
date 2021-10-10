@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+ frontend:
+  container_name: ist_material_frontend
+  build: ./frontend # Where to build the container
+  image: ist_material_frontend
+  restart: always # if the service goes down, always restart
+  ports: # extern-port:intern-port
+    - 8080:80
+  
+ database:
+  container_name: ist_material_database
+  image:  postgres:13-alpine
+  restart: always # if the service goes down, always restart
+  volumes: # map the host directory (\data) to the container(postgresql/data). <- where postgres stores the database content
+   - D:\Praktikum\IST_Material\database\data:/var/lib/postgresql/data
+  ports: # extern-port:intern-port
+   - 5431:5432
+  environment: # password that should be used
+   - POSTGRES_PASSWORD=test
+  
+ backend:
+  container_name: ist_material_backend
+  image: ist_material_backend
+  build: ./backend
+  restart: always
+  environment: # connection to the DB
+   - database.server=localhost
+   - database.name=ISTM_DB
+   - database.user=postgres
+   - database.password=test
+  ports: # extern-port:intern-port
+   - 5000:5000
+  links: # now the backend and postgres-Server are linked
+   - database
+  depends_on: # backend cant be started without the database
+   - database
